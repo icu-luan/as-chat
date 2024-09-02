@@ -31,6 +31,9 @@ public class SocketActivity extends AppCompatActivity {
         Log.d(TAG, "SocketActivity1 ");
         new ReceiveImageTask().execute();
     }
+
+    //AsyncTask 现在没人用了
+
     private class ReceiveImageTask extends AsyncTask<Void, Void, Bitmap> {
 
         @Override

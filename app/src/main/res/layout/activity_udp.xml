@@ -10,6 +10,14 @@
         android:text="Server IP: "
         android:layout_margin="16dp"/>
 
+    <TextView
+        android:id="@+id/messageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Message Content \n"
+        android:layout_below="@id/sendButton"
+        android:layout_margin="16dp"/>
+
     <EditText
         android:id="@+id/messageEditText"
         android:layout_width="match_parent"
