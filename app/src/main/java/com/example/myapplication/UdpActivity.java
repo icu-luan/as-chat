@@ -34,7 +34,6 @@ public class UdpActivity extends AppCompatActivity {
     private String serverIp;
     private Socket socket;
     private OutputStream outputStream;
-    private InputStream inputStream;
 
     private TextView ipTextView;
     private TextView messageView;
@@ -66,24 +65,72 @@ public class UdpActivity extends AppCompatActivity {
 
     }
 
-    private void getMessages() {
+    private void getMessages(InputStream inputStream) throws IOException {
         Log.d(TAG, "接收服务端数据 " + "socket:"+socket + "inputStream:"+inputStream);
         if (socket != null && inputStream != null) {
-
+            Log.d(TAG, "数据不为空");
             // 读取数据
             response = new StringBuilder();
-            
+                //........................................ readLine
                 // 获取输入流
+            byte[] data2 = new byte[1024];
+            //这里就可以直接读取了
+            inputStream.read(data2);
+            //比如：
+            if (data2[0] == 0x01){
+                //表示这个是个String
+                //下一位表示长度
+                int len = data2[1];
+                //那么结果就是：
+                //data[第一位是协议啊0x01，第二位是长度啊,0xaa,内容。。。。。。。。。。。]
+                //所以字符串要从第二位开始解析啊，这个协议我怎么确定，固定吗
+                //协议 就是你和大金硬件部门讨论确定的啊，我指的是我现在从，socket收到的数据
+                //下班了 听不懂话你说啥没用的死丫头
+                //活生生蠢死
+                //明天用Android 改写服务端
+                //简单点 不要要UDP寻址了退下吧
+                //我要吃饭了蠢死
+                String stringx = new String(data2,2,len);
+            }else if (data2[0] == 0x02){
+                //表示这个是个图
+            }
+
+
                 BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
                 String serverMessage;
-                try {
-                    serverMessage = in.readLine();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                char[] data = new char[1024];
+                //ok了么？readline不行吗
+                //我和你说了多少次了。。。我说的话记一下
+                //socket 传输数据本质上是传输 char[] or byte[] 一个意思
+                //readline 重点是line 意味着一个消息以'\n'作为分界线
+                //服务端发送的消息 没有\n
+                //意味着 客户端以为服务端没法送完，在等一个\n作为结尾
+                //大姐，这和我记住上面的话一点关系都没有
+                //socket 作为底层数据传送 传输的不是string 因为会有编码问题各种问题
+                //socket再任何平台都用int = read（参数是内存块），int是读取到的数据长度
+
+            //这段代码你整理下吧 我下了
+            //累死，退下吧
+                while (true){
+                    int len = in.read(data);
+                    String string = new String(data,0,len);
+                    Log.d(TAG, "获取到服务端数据 "+ string);
+//                    response.append(serverMessage).append("\n");
+                    runOnUiThread(() -> appendMessage("Server Message: " + string));
                 }
-                Log.d(TAG, "获取到服务端数据 "+ serverMessage);
-                response.append(serverMessage).append("\n");
-                runOnUiThread(() -> appendMessage("Client Message: " + response));
+//                try {
+//                    Log.d(TAG, "in:" + in);
+//                    serverMessage = in.readLine();
+//                    Log.d(TAG, "serverMessage");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    Log.e(TAG, "IOException:"+e);
+//
+//                    throw new RuntimeException(e);
+//                }
+//                Log.d(TAG, "获取到服务端数据 "+ serverMessage);
+//                response.append(serverMessage).append("\n");
+//                runOnUiThread(() -> appendMessage("Server Message: " + response));
 
         }
     }
@@ -105,12 +152,14 @@ public class UdpActivity extends AppCompatActivity {
 
             runOnUiThread(() -> ipTextView.setText("Server IP: " + serverIp));
 
+            //这里是UDP结束
             udpSocket.close();
-
+            //TCP开始
             socket = new Socket(serverIp, TCP_PORT);
             outputStream = socket.getOutputStream();
-            inputStream = socket.getInputStream();
-            new Thread(() -> getMessages()).start();
+            InputStream inputStream = socket.getInputStream();
+            getMessages(inputStream);
+//            new Thread(() -> getMessages(inputStream)).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
