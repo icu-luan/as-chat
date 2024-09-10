@@ -1,0 +1,50 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="client"
+            type="com.example.myapplication.ChatClientActivity" />
+    </data>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/statusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Client Status" />
+        <TextView
+            android:id="@+id/messagesTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/statusTextView"
+            android:text="Client Messages" />
+        <ImageView
+            android:id="@+id/receivedImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@id/messagesTextView" />
+        <EditText
+            android:id="@+id/messageEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messagesTextView"
+            android:hint="Type a message"
+            android:text="@={client.message}" />
+
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/messageEditText"
+            android:text="Send"
+            android:onClick="@{() -> client.onSendClick()}" />
+        <Button
+            android:id="@+id/sendImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sendButton"
+            android:text="Send Image"
+            android:onClick="@{() -> client.onSendImageClick()}" />
+    </RelativeLayout>
+</layout>

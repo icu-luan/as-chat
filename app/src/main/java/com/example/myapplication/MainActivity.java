@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_web_socket).setOnClickListener(this);
         findViewById(R.id.btn_socket).setOnClickListener(this);
         findViewById(R.id.btn_udp).setOnClickListener(this);
+        findViewById(R.id.btn_client).setOnClickListener(this);
 
         // 请求权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_udp:
                 intent.setClass(MainActivity.this, UdpActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_client:
+                intent.setClass(MainActivity.this, ChatClientActivity.class);
                 startActivity(intent);
                 break;
             default:
